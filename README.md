@@ -2,54 +2,93 @@
 
 **AI-Powered Application Log Analysis & Debugging Platform**
 
-IntelliTrace AI is a full-stack web application that helps developers analyse application log files, identify recurring errors, investigate Java exceptions, and obtain AI-assisted explanations and troubleshooting suggestions.
+IntelliTrace AI is a full-stack web application that helps developers analyze application log files, identify recurring errors, investigate Java exceptions, and obtain AI-assisted explanations and troubleshooting suggestions.
 
 ---
 
 ## 🚀 Features
 
-- **Log File Upload** — Upload `.log` and `.txt` files with validation
-- **Java Log Parsing** — Extract timestamps, severity levels, messages, logger names, and multiline stack traces
-- **Error Analysis** — Count entries by severity, group recurring errors, calculate frequencies
-- **Stack Trace Analysis** — Parse and display Java exception chains with class names, methods, and line numbers
-- **AI Error Explanation** — Get AI-powered explanations, possible causes, and troubleshooting steps
-- **Analysis History** — View and manage past analyses stored in the database
-- **Report Export** — Download analysis reports in CSV or TXT format
-- **Interactive Dashboard** — Polished React frontend with severity charts, search, and filtering
+- **Log File Upload** — Upload `.log` and `.txt` files with validation.
+- **Java Log Parsing** — Extract timestamps, severity levels, messages, logger names, and multiline stack traces.
+- **Error Analysis** — Count entries by severity, group recurring errors, and calculate frequencies.
+- **Stack Trace Analysis** — Parse and display Java exception chains with class names, methods, and line numbers.
+- **AI Error Explanation** — Get AI-powered explanations, possible causes, and troubleshooting steps using Google Gemini.
+- **Heuristic Fallback** — Continue receiving diagnostic suggestions when the Gemini API is unavailable.
+- **Analysis History** — View and manage past analyses stored in the database.
+- **Report Export** — Download analysis reports in CSV or TXT format.
+- **Interactive Dashboard** — React frontend with severity charts, search, filtering, and error grouping.
 
 ---
 
 ## 🏗️ Architecture
 
-```
-React Frontend  →  Axios  →  Spring Boot REST API  →  Service Layer
-                                                          ↓
-                                                    Log Parser + Analyzer
-                                                          ↓
-                                                    Spring Data JPA → Hibernate → MySQL/H2
-                                                          
-                                                    AI Service → External AI API (optional)
+```text
+React Frontend
+      |
+      v
+Axios HTTP Client
+      |
+      v
+Spring Boot REST API
+      |
+      v
+Service Layer
+      |
+      +--------------------+
+      |                    |
+      v                    v
+Log Parser            AI Service
+      |                    |
+      v                    v
+Log Analyzer       Google Gemini API
+      |
+      v
+Error Grouping
+      |
+      v
+Spring Data JPA
+      |
+      v
+Hibernate ORM
+      |
+      v
+MySQL / H2 Database
 ```
 
-**Technology Stack:**
+### Technology Stack
 
 | Layer | Technology |
-|-------|-----------|
-| Backend | Java 21, Spring Boot 3.x, Maven |
-| Database | MySQL (production), H2 (development) |
+|---|---|
+| Backend | Java 21, Spring Boot 3.x |
+| Build Tool | Maven |
+| Frontend | React, JavaScript, HTML, CSS |
+| HTTP Client | Axios |
+| Database | MySQL, H2 |
 | ORM | Spring Data JPA, Hibernate |
-| Frontend | React, JavaScript, Axios, CSS |
-| AI | Google Gemini API (`gemini-2.0-flash`) |
+| AI Integration | Google Gemini API (`gemini-3.8-flash`) |
 | Testing | JUnit 5, Mockito, Spring Boot Test |
+| Development Tools | VS Code, Git, GitHub |
 
 ---
 
 ## 📋 Prerequisites
 
-- **Java 21** (JDK)
+Install the following software before running the application:
+
+- **Java 21** — JDK
 - **Maven 3.8+**
-- **Node.js 18+** and **npm 9+**
-- **MySQL 8.0+** (optional — H2 used by default for development)
+- **Node.js 18+**
+- **npm 9+**
+- **MySQL 8.0+** — Optional when using H2
+
+Verify your installations:
+
+```powershell
+java -version
+mvn -version
+node -v
+npm -v
+```
 
 ---
 
@@ -58,193 +97,302 @@ React Frontend  →  Axios  →  Spring Boot REST API  →  Service Layer
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/koushikrai10/IntelliTraceAI.git
 cd IntelliTraceAI
 ```
 
 ### 2. Configure Environment Variables
 
-```bash
-cp .env.example .env
-# Edit .env with your actual configuration
-```
+The repository contains an `.env.example` template.
 
-### 3. Database Setup Options
+Create your own `.env` file by copying the template.
 
-IntelliTrace AI supports three storage modes:
+**Windows PowerShell:**
 
-#### Option A: H2 In-Memory (`dev` — Default)
-- **Persistence**: Resets whenever the backend restarts.
-- **Setup Required**: None.
-- **Run Command**:
-  ```bash
-  cd backend
-  mvn spring-boot:run
-  ```
-
-#### Option B: Persistent File-Based H2 (`h2-file` — Local Persistence)
-- **Persistence**: Saves database records to `./data/intellitracedb.mv.db`. History survives application restarts with zero external database setup!
-- **Run Command**:
-  ```bash
-  cd backend
-  mvn spring-boot:run -Dspring-boot.run.profiles=h2-file
-  ```
-  Or in PowerShell:
-  ```powershell
-  $env:SPRING_PROFILES_ACTIVE="h2-file"
-  mvn spring-boot:run
-  ```
-
-#### Option C: Production MySQL (`mysql` — Recommended for Full Deployment)
-- **Persistence**: Full relational persistence in MySQL Server 8.0+.
-- **Step 1**: Start MySQL on Windows (via Windows Services or Command Prompt):
-  ```powershell
-  net start MySQL80
-  ```
-- **Step 2**: Create the database (or let Hibernate create it automatically):
-  ```sql
-  CREATE DATABASE IF NOT EXISTS intellitracedb;
-  ```
-- **Step 3**: Configure credentials in `.env` or system environment:
-  ```powershell
-  $env:SPRING_PROFILES_ACTIVE="mysql"
-  $env:MYSQL_USERNAME="root"
-  $env:MYSQL_PASSWORD="your_password"
-  ```
-- **Step 4**: Run backend with MySQL profile:
-  ```bash
-  mvn spring-boot:run -Dspring-boot.run.profiles=mysql
-  ```
-
-### 4. AI API Configuration (Optional)
-
-IntelliTrace AI integrates with **Google Gemini** (`gemini-2.0-flash`) for automated diagnostic root-cause deduction.
-
-Set your Gemini API key as an environment variable:
 ```powershell
-# In PowerShell:
-$env:GEMINI_API_KEY="your_actual_gemini_api_key"
-
-# In Bash / CMD:
-export GEMINI_API_KEY="your_actual_gemini_api_key"
-set GEMINI_API_KEY=your_actual_gemini_api_key
+Copy-Item .env.example .env
 ```
 
-> **Note**: The application is 100% operational without an API key! If no key is configured or if the Gemini service is unreachable, IntelliTrace AI uses its built-in deterministic heuristic fallback engine. The UI clearly displays whether the diagnostic result was produced by Gemini or the local heuristic engine.
+Open `.env` and configure the values required for your environment.
 
-### 5. Start the Backend
+> **Security:** Never upload your actual `.env` file, database password, or Gemini API key to GitHub. The `.env` file should remain local.
 
-```bash
+**Important:** Spring Boot does not automatically load every `.env` file as operating-system environment variables. If your application does not explicitly load `.env`, configure the required variables in your terminal or IDE.
+
+---
+
+## 🗄️ Database Configuration
+
+IntelliTrace AI supports three storage modes.
+
+### Option A: H2 In-Memory Database
+
+**Profile:** `dev`
+
+- No external database installation is required.
+- Data is stored in memory.
+- Database contents are lost when the application restarts.
+
+Run the backend:
+
+```powershell
 cd backend
 mvn spring-boot:run
 ```
 
-The backend starts on `http://localhost:8080`.
+This uses the default configuration when the active profile is `dev`.
 
-### 6. Start the Frontend
+### Option B: Persistent File-Based H2 Database
 
-```bash
+**Profile:** `h2-file`
+
+- Saves database records to a local file.
+- Data survives application restarts.
+- Does not require a separate database server.
+
+Run the backend:
+
+```powershell
+cd backend
+mvn spring-boot:run -Dspring-boot.run.profiles=h2-file
+```
+
+Alternatively, in PowerShell:
+
+```powershell
+$env:SPRING_PROFILES_ACTIVE = "h2-file"
+mvn spring-boot:run
+```
+
+The database file is stored in the configured local data directory.
+
+### Option C: MySQL Database
+
+**Profile:** `mysql`
+
+MySQL is suitable for persistent relational storage.
+
+#### Step 1: Start MySQL
+
+On Windows, if your MySQL service is named `MySQL80`, run PowerShell as Administrator:
+
+```powershell
+net start MySQL80
+```
+
+The service name may differ depending on your installation.
+
+#### Step 2: Create the Database
+
+Open MySQL Workbench or the MySQL command-line client and execute:
+
+```sql
+CREATE DATABASE IF NOT EXISTS intellitracedb;
+```
+
+#### Step 3: Configure MySQL Credentials
+
+Set your database credentials using environment variables.
+
+**PowerShell example:**
+
+```powershell
+$env:SPRING_PROFILES_ACTIVE = "mysql"
+$env:MYSQL_HOST = "localhost"
+$env:MYSQL_PORT = "3306"
+$env:MYSQL_DATABASE = "intellitracedb"
+$env:MYSQL_USERNAME = "root"
+$env:MYSQL_PASSWORD = "your_actual_mysql_password"
+```
+
+Replace `your_actual_mysql_password` with your own MySQL password.
+
+**Important:** The username `root` is only an example. Use the MySQL account configured on your machine.
+
+For better security, a dedicated database user with only the required permissions is preferable to using the root account.
+
+#### Step 4: Run the Backend
+
+From the `backend` directory:
+
+```powershell
+mvn spring-boot:run -Dspring-boot.run.profiles=mysql
+```
+
+The backend connects to MySQL using the configured connection properties.
+
+**Credential configuration notes:**
+
+- `MYSQL_HOST` — MySQL server hostname.
+- `MYSQL_PORT` — MySQL server port, usually `3306`.
+- `MYSQL_DATABASE` — Database name, `intellitracedb`.
+- `MYSQL_USERNAME` — Your MySQL username.
+- `MYSQL_PASSWORD` — Your MySQL password.
+
+Ensure that the environment variable names match those referenced by your Spring Boot configuration files.
+
+---
+
+## 🤖 AI API Configuration
+
+IntelliTrace AI integrates with Google Gemini to generate AI-assisted error explanations, possible causes, and troubleshooting suggestions.
+
+### Step 1: Obtain an API Key
+
+Generate an API key through Google AI Studio:
+
+https://aistudio.google.com/
+
+### Step 2: Configure the API Key
+
+Set the API key as an environment variable.
+
+**PowerShell:**
+
+```powershell
+$env:GEMINI_API_KEY = "your_actual_gemini_api_key"
+$env:GEMINI_MODEL = "gemini-3.8-flash"
+```
+
+Replace the placeholder with your actual API key.
+
+The application is designed to use heuristic diagnostics when the API key is missing or the external AI service is unavailable.
+
+The interface displays the diagnostic source, distinguishing Gemini-generated explanations from heuristic results and fallback responses.
+
+> **Security warning:** Never commit your actual Gemini API key to source control. If a key is accidentally exposed, revoke it and generate a replacement.
+
+---
+
+## ▶️ Running the Application
+
+### 1. Start the Backend
+
+Open a terminal:
+
+```powershell
+cd backend
+mvn spring-boot:run
+```
+
+The backend normally starts at:
+
+```text
+http://localhost:8080
+```
+
+The active database profile depends on your configuration.
+
+### 2. Start the Frontend
+
+Open a second terminal:
+
+```powershell
 cd frontend
 npm install
 npm run dev
 ```
 
-The frontend starts on `http://localhost:5173`.
+The Vite development server normally starts at:
 
-### 7. Run Tests
+```text
+http://localhost:5173
+```
 
-```bash
+Open the displayed frontend URL in your browser.
+
+---
+
+## 🧪 Running Tests
+
+Navigate to the backend directory:
+
+```powershell
 cd backend
 mvn clean test
 ```
+
+The test suite covers areas including:
+
+- Log parsing and edge cases.
+- Multiline stack trace parsing.
+- Error grouping and analysis.
+- File validation.
+- Service layer logic.
+- REST controller behavior.
+- AI service failure handling.
+
+External AI calls should be mocked in unit tests to keep tests independent of API availability and avoid unnecessary API usage.
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 IntelliTraceAI/
-├── backend/                    # Spring Boot application
-│   ├── pom.xml                 # Maven dependencies
+├── backend/
+│   ├── pom.xml
 │   └── src/
-│       ├── main/java/com/intellitrace/
-│       │   ├── controller/     # REST API endpoints
-│       │   ├── service/        # Business logic
-│       │   ├── parser/         # Log parsing engine
-│       │   ├── analyzer/       # Error analysis & grouping
-│       │   ├── ai/             # AI API integration
-│       │   ├── entity/         # JPA database entities
-│       │   ├── repository/     # Spring Data JPA repositories
-│       │   ├── dto/            # Data Transfer Objects
-│       │   ├── exception/      # Custom exceptions & handler
-│       │   └── config/         # App configuration
-│       └── test/               # Unit & integration tests
-├── frontend/                   # React application
+│       ├── main/
+│       │   ├── java/com/intellitrace/
+│       │   │   ├── controller/
+│       │   │   ├── service/
+│       │   │   ├── parser/
+│       │   │   ├── analyzer/
+│       │   │   ├── ai/
+│       │   │   ├── entity/
+│       │   │   ├── repository/
+│       │   │   ├── dto/
+│       │   │   ├── exception/
+│       │   │   └── config/
+│       │   └── resources/
+│       └── test/
+├── frontend/
+│   ├── package.json
+│   ├── package-lock.json
 │   └── src/
-│       ├── components/         # React UI components
-│       └── services/           # API communication layer
-├── samples/                    # Sample log files for testing
-├── docs/                       # Learning guide & documentation
-├── .env.example                # Environment variable template
-└── README.md                   # This file
+│       ├── components/
+│       ├── services/
+│       ├── App.jsx
+│       └── main.jsx
+├── samples/
+│   ├── sample-application.log
+│   ├── sample-edge-cases.txt
+│   └── sample-microservice.log
+├── .env.example
+├── .gitignore
+└── README.md
 ```
+
+The personal learning guide and its generation scripts are maintained locally and are not part of the public repository.
 
 ---
 
 ## 🔌 API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/analysis/upload` | Upload and analyse a log file |
-| GET | `/api/analysis/{id}` | Get analysis results by ID |
-| GET | `/api/history` | List all past analyses |
+|---|---|---|
+| POST | `/api/analysis/upload` | Upload and analyze a log file |
+| GET | `/api/analysis/{id}` | Retrieve analysis results by ID |
+| GET | `/api/history` | List past analyses |
 | DELETE | `/api/history/{id}` | Delete an analysis |
-| POST | `/api/ai/explain` | Get AI explanation for an error |
-| GET | `/api/report/{id}/csv` | Download CSV report |
-| GET | `/api/report/{id}/txt` | Download TXT report |
-
----
-
-## 📖 Documentation
-
-The complete learning guide is available at:
-- **PDF**: `docs/IntelliTrace_AI_Complete_Learning_Guide.pdf`
-- **Markdown**: `docs/IntelliTrace_AI_Complete_Learning_Guide.md`
-
-This guide covers:
-- System architecture and code walkthrough
-- Java concepts used in the project
-- Log parsing algorithm explained
-- Spring Boot, JPA, and REST API documentation
-- React frontend architecture
-- AI integration details
-- 100+ interview questions with answers
-- Practical modification exercises
-
----
-
-## 🧪 Testing
-
-The project includes comprehensive tests for:
-- Log parsing (various formats, edge cases, multiline)
-- Stack trace extraction
-- Error grouping and analysis
-- File validation
-- Service layer logic
-- REST controller endpoints
-- AI service failure handling
+| POST | `/api/ai/explain` | Request an AI explanation |
+| GET | `/api/report/{id}/csv` | Download a CSV report |
+| GET | `/api/report/{id}/txt` | Download a TXT report |
 
 ---
 
 ## ⚠️ Known Limitations
 
-- Log parser supports common Java log formats; not all formats are guaranteed to parse correctly
-- AI explanations require an external API key and are suggestions, not verified diagnoses
-- H2 database does not persist data between application restarts
-- Error grouping uses heuristic normalisation which may not be perfect for all error patterns
+- The parser supports common Java log formats, but not every logging format is guaranteed to be recognized.
+- AI explanations are suggestions and should be validated by developers.
+- H2 in-memory storage does not preserve data after application restarts.
+- Error grouping uses heuristic normalization and may not group every variation of an error perfectly.
+- AI-powered explanations depend on external API availability and valid credentials.
+- Heuristic fallback diagnostics may be less detailed than AI-generated explanations.
 
 ---
 
 ## 📄 License
 
-This project is a student portfolio project for educational purposes.
+IntelliTrace AI is a student portfolio project developed for educational purposes.
