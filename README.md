@@ -34,13 +34,13 @@ Spring Boot REST API
       v
 Service Layer
       |
-      +--------------------+
-      |                    |
-      v                    v
-Log Parser            AI Service
-      |                    |
-      v                    v
-Log Analyzer       Google Gemini API
+      +-------------------------+
+      |                         |
+      v                         v
+Log Parser                 AI Service
+      |                         |
+      v                         v
+Log Analyzer             Google Gemini API
       |
       v
 Error Grouping
@@ -103,9 +103,9 @@ cd IntelliTraceAI
 
 ### 2. Configure Environment Variables
 
-The repository contains an `.env.example` template.
+The repository contains an `.env.example` file with the environment variables used by the application.
 
-Create your own `.env` file by copying the template.
+Copy the template to create your local configuration file.
 
 **Windows PowerShell:**
 
@@ -115,9 +115,9 @@ Copy-Item .env.example .env
 
 Open `.env` and configure the values required for your environment.
 
-> **Security:** Never upload your actual `.env` file, database password, or Gemini API key to GitHub. The `.env` file should remain local.
+> **Security:** Never commit your actual `.env` file, database password, or Gemini API key to GitHub.
 
-**Important:** Spring Boot does not automatically load every `.env` file as operating-system environment variables. If your application does not explicitly load `.env`, configure the required variables in your terminal or IDE.
+**Note:** Spring Boot does not automatically load every `.env` file as operating-system environment variables. If the project does not explicitly load the file, configure the variables through your terminal, IDE, or another supported configuration mechanism.
 
 ---
 
@@ -129,7 +129,7 @@ IntelliTrace AI supports three storage modes.
 
 **Profile:** `dev`
 
-- No external database installation is required.
+- No external database server is required.
 - Data is stored in memory.
 - Database contents are lost when the application restarts.
 
@@ -146,7 +146,7 @@ This uses the default configuration when the active profile is `dev`.
 
 **Profile:** `h2-file`
 
-- Saves database records to a local file.
+- Stores database records in a local file.
 - Data survives application restarts.
 - Does not require a separate database server.
 
@@ -164,17 +164,19 @@ $env:SPRING_PROFILES_ACTIVE = "h2-file"
 mvn spring-boot:run
 ```
 
-The database file is stored in the configured local data directory.
+The database file is stored in the location configured by the application.
 
 ### Option C: MySQL Database
 
 **Profile:** `mysql`
 
-MySQL is suitable for persistent relational storage.
+MySQL provides persistent relational storage.
 
 #### Step 1: Start MySQL
 
-On Windows, if your MySQL service is named `MySQL80`, run PowerShell as Administrator:
+Start your MySQL server using your operating system's service manager or your installed MySQL management tool.
+
+For example, if your Windows MySQL service is named `MySQL80`, open PowerShell as Administrator and run:
 
 ```powershell
 net start MySQL80
@@ -192,24 +194,36 @@ CREATE DATABASE IF NOT EXISTS intellitracedb;
 
 #### Step 3: Configure MySQL Credentials
 
-Set your database credentials using environment variables.
+Configure the database connection using environment variables.
 
-**PowerShell example:**
+**Windows PowerShell:**
 
 ```powershell
 $env:SPRING_PROFILES_ACTIVE = "mysql"
 $env:MYSQL_HOST = "localhost"
 $env:MYSQL_PORT = "3306"
 $env:MYSQL_DATABASE = "intellitracedb"
-$env:MYSQL_USERNAME = "root"
-$env:MYSQL_PASSWORD = "your_actual_mysql_password"
+$env:MYSQL_USERNAME = "your_mysql_username"
+$env:MYSQL_PASSWORD = "your_mysql_password"
 ```
 
-Replace `your_actual_mysql_password` with your own MySQL password.
+Replace `your_mysql_username` and `your_mysql_password` with the credentials for your own MySQL account.
 
-**Important:** The username `root` is only an example. Use the MySQL account configured on your machine.
+The values above are examples, not actual credentials.
 
-For better security, a dedicated database user with only the required permissions is preferable to using the root account.
+**Configuration variables:**
+
+| Variable | Description | Example |
+|---|---|---|
+| `MYSQL_HOST` | MySQL server hostname | `localhost` |
+| `MYSQL_PORT` | MySQL server port | `3306` |
+| `MYSQL_DATABASE` | Database name | `intellitracedb` |
+| `MYSQL_USERNAME` | Your MySQL username | `your_mysql_username` |
+| `MYSQL_PASSWORD` | Your MySQL password | `your_mysql_password` |
+
+For improved security, use a dedicated database account with the permissions the application needs.
+
+**Security:** Never put real database credentials in your README, `.env.example`, or public GitHub repository.
 
 #### Step 4: Run the Backend
 
@@ -219,48 +233,40 @@ From the `backend` directory:
 mvn spring-boot:run -Dspring-boot.run.profiles=mysql
 ```
 
-The backend connects to MySQL using the configured connection properties.
-
-**Credential configuration notes:**
-
-- `MYSQL_HOST` — MySQL server hostname.
-- `MYSQL_PORT` — MySQL server port, usually `3306`.
-- `MYSQL_DATABASE` — Database name, `intellitracedb`.
-- `MYSQL_USERNAME` — Your MySQL username.
-- `MYSQL_PASSWORD` — Your MySQL password.
-
-Ensure that the environment variable names match those referenced by your Spring Boot configuration files.
+Ensure that the environment variable names match those referenced by your Spring Boot configuration.
 
 ---
 
 ## 🤖 AI API Configuration
 
-IntelliTrace AI integrates with Google Gemini to generate AI-assisted error explanations, possible causes, and troubleshooting suggestions.
+IntelliTrace AI integrates with Google Gemini to generate AI-assisted explanations of errors, possible causes, and troubleshooting suggestions.
 
 ### Step 1: Obtain an API Key
 
-Generate an API key through Google AI Studio:
+Create an API key through Google AI Studio:
 
 https://aistudio.google.com/
 
 ### Step 2: Configure the API Key
 
-Set the API key as an environment variable.
+Set the Gemini API key as an environment variable.
 
-**PowerShell:**
+**Windows PowerShell:**
 
 ```powershell
 $env:GEMINI_API_KEY = "your_actual_gemini_api_key"
 $env:GEMINI_MODEL = "gemini-3.8-flash"
 ```
 
-Replace the placeholder with your actual API key.
+Replace the placeholder with your own API key.
+
+The configured model must be available to your API key.
 
 The application is designed to use heuristic diagnostics when the API key is missing or the external AI service is unavailable.
 
-The interface displays the diagnostic source, distinguishing Gemini-generated explanations from heuristic results and fallback responses.
+The interface distinguishes between Gemini-generated explanations, heuristic diagnostics, and fallback responses.
 
-> **Security warning:** Never commit your actual Gemini API key to source control. If a key is accidentally exposed, revoke it and generate a replacement.
+> **Security warning:** Never commit your real Gemini API key to source control. If a key is exposed, revoke it and generate a replacement.
 
 ---
 
@@ -322,7 +328,7 @@ The test suite covers areas including:
 - REST controller behavior.
 - AI service failure handling.
 
-External AI calls should be mocked in unit tests to keep tests independent of API availability and avoid unnecessary API usage.
+External AI calls should be mocked in unit tests to avoid depending on API availability or consuming API quota.
 
 ---
 
@@ -364,7 +370,7 @@ IntelliTraceAI/
 └── README.md
 ```
 
-The personal learning guide and its generation scripts are maintained locally and are not part of the public repository.
+Personal learning guides and their generation scripts are maintained locally and are not included in the public repository.
 
 ---
 
