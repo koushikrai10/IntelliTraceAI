@@ -37,3 +37,8 @@ data/
 # Python cache
 __pycache__/
 *.py[cod]
+
+# Personal learning guides - keep locally, exclude from GitHub
+/docs/
+build_all_guides.py
+guide_data_part*.py
