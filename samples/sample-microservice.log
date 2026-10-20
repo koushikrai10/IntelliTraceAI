@@ -1,0 +1,43 @@
+2024-02-20 09:00:01.123 INFO  [com.microservice.gateway.GatewayApp] - API Gateway starting
+2024-02-20 09:00:02.456 INFO  [com.microservice.gateway.GatewayApp] - Routes configured: /api/users, /api/orders, /api/products
+2024-02-20 09:05:15.789 ERROR [com.microservice.gateway.filter.AuthFilter] - Authentication token expired
+io.jsonwebtoken.ExpiredJwtException: JWT expired at 2024-02-20T08:55:00Z
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:385)
+	at com.microservice.gateway.filter.AuthFilter.validateToken(AuthFilter.java:45)
+	at com.microservice.gateway.filter.AuthFilter.doFilter(AuthFilter.java:28)
+2024-02-20 09:10:30.012 WARN  [com.microservice.gateway.RateLimiter] - Rate limit approaching for client: mobile-app-v2 (450/500 requests)
+2024-02-20 09:15:45.234 ERROR [com.microservice.service.InventoryService] - Stock update failed for product SKU-7890
+java.util.ConcurrentModificationException: Collection was modified during iteration
+	at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
+	at java.util.ArrayList$Itr.next(ArrayList.java:967)
+	at com.microservice.service.InventoryService.updateStock(InventoryService.java:78)
+	at com.microservice.controller.InventoryController.bulkUpdate(InventoryController.java:45)
+2024-02-20 09:20:00.456 DEBUG [com.microservice.service.InventoryService] - Inventory cache refreshed: 3456 products loaded
+2024-02-20 09:25:15.789 ERROR [com.microservice.gateway.filter.AuthFilter] - Authentication token expired
+io.jsonwebtoken.ExpiredJwtException: JWT expired at 2024-02-20T09:15:00Z
+	at io.jsonwebtoken.impl.DefaultJwtParser.parse(DefaultJwtParser.java:385)
+	at com.microservice.gateway.filter.AuthFilter.validateToken(AuthFilter.java:45)
+	at com.microservice.gateway.filter.AuthFilter.doFilter(AuthFilter.java:28)
+2024-02-20 09:30:33.012 INFO  [com.microservice.service.UserService] - New user registered: user_count=15678
+2024-02-20 09:35:45.234 ERROR [com.microservice.repository.OrderRepository] - Failed to save order
+org.hibernate.exception.ConstraintViolationException: could not execute statement
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:109)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:113)
+	at com.microservice.repository.OrderRepository.save(OrderRepository.java:34)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'ORD-12345' for key 'order_number'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:117)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953)
+2024-02-20 09:40:00.456 WARN  [com.microservice.service.EmailService] - SMTP connection unstable, retrying in 30s
+2024-02-20 09:45:22.789 ERROR [com.microservice.service.InventoryService] - Stock update failed for product SKU-4567
+java.util.ConcurrentModificationException: Collection was modified during iteration
+	at java.util.ArrayList$Itr.checkForComodification(ArrayList.java:1013)
+	at java.util.ArrayList$Itr.next(ArrayList.java:967)
+	at com.microservice.service.InventoryService.updateStock(InventoryService.java:78)
+	at com.microservice.controller.InventoryController.bulkUpdate(InventoryController.java:45)
+2024-02-20 10:00:00.012 INFO  [com.microservice.scheduler.HealthCheck] - System health: CPU=45%, Memory=67%, Disk=72%
+2024-02-20 10:15:33.234 ERROR [com.microservice.service.SearchService] - Elasticsearch query failed
+org.elasticsearch.ElasticsearchException: search_phase_execution_exception
+	at org.elasticsearch.client.RestHighLevelClient.internalPerformRequest(RestHighLevelClient.java:1632)
+	at com.microservice.service.SearchService.searchProducts(SearchService.java:56)
+Caused by: java.net.SocketTimeoutException: 30,000 milliseconds timeout on connection
+	at org.elasticsearch.client.RestClient.extractAndWrapCause(RestClient.java:789)

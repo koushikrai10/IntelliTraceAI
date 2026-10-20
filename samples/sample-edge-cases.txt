@@ -1,0 +1,11 @@
+This is a minimal log for edge case testing.
+INFO Starting application
+WARNING Low memory
+ERROR Something went wrong
+Some random text without any log format
+   continuation line
+another random line
+
+2024-03-01 12:00:00 INFO Simple format log
+[2024-03-01T12:00:01Z] ERROR Different timestamp format
+ERROR No timestamp at all - just an error message

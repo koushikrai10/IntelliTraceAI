@@ -1,0 +1,77 @@
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px;
+}
+
+.spinner-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-ring {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: rgba(0, 212, 255, 0.15);
+  border-top-color: var(--accent-cyan);
+  border-right-color: var(--accent-purple);
+  animation: spin 0.9s cubic-bezier(0.5, 0.1, 0.5, 0.9) infinite;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
+}
+
+.spinner-sm .spinner-ring {
+  width: 22px;
+  height: 22px;
+  border-width: 2.5px;
+}
+
+.spinner-md .spinner-ring {
+  width: 44px;
+  height: 44px;
+  border-width: 3.5px;
+}
+
+.spinner-lg .spinner-ring {
+  width: 68px;
+  height: 68px;
+  border-width: 4.5px;
+}
+
+.spinner-pulse-center {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+  animation: pulseGlow 1.8s ease-in-out infinite;
+}
+
+.spinner-sm .spinner-pulse-center {
+  width: 8px;
+  height: 8px;
+}
+
+.spinner-md .spinner-pulse-center {
+  width: 16px;
+  height: 16px;
+}
+
+.spinner-lg .spinner-pulse-center {
+  width: 26px;
+  height: 26px;
+}
+
+.spinner-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

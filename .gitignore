@@ -1,0 +1,39 @@
+# .env
+.env
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Java
+target/
+*.class
+*.jar
+*.war
+
+# Node
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database (H2 file-based storage)
+data/
+*.db
+*.mv.db
+*.trace.db
+
+# Logs
+*.log.bak
+
+# Environment variables and secrets
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]

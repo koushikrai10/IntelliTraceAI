@@ -1,0 +1,88 @@
+2024-01-15 08:00:01.234 INFO  [com.example.app.Application] - Application starting on port 8080
+2024-01-15 08:00:01.456 INFO  [com.example.app.config.DatabaseConfig] - Initializing database connection pool
+2024-01-15 08:00:02.100 DEBUG [com.example.app.config.DatabaseConfig] - Connection pool size: min=5, max=20
+2024-01-15 08:00:02.345 INFO  [com.example.app.config.DatabaseConfig] - Database connection established successfully
+2024-01-15 08:00:03.001 INFO  [com.example.app.security.SecurityConfig] - Configuring security filters
+2024-01-15 08:00:03.567 INFO  [com.example.app.Application] - Application started successfully in 3.2 seconds
+2024-01-15 08:15:22.789 INFO  [com.example.app.controller.UserController] - Processing login request for user: john.doe@example.com
+2024-01-15 08:15:23.012 DEBUG [com.example.app.service.AuthService] - Validating credentials for user: john.doe@example.com
+2024-01-15 08:15:23.234 INFO  [com.example.app.service.AuthService] - User authenticated successfully: john.doe@example.com
+2024-01-15 08:30:45.123 ERROR [com.example.app.service.OrderService] - Failed to process order for user 12345
+java.lang.NullPointerException: Cannot invoke method on null object reference
+	at com.example.app.service.OrderService.processOrder(OrderService.java:87)
+	at com.example.app.service.OrderService.handleCheckout(OrderService.java:45)
+	at com.example.app.controller.OrderController.checkout(OrderController.java:32)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:897)
+2024-01-15 08:31:00.456 WARN  [com.example.app.service.OrderService] - Retrying order processing for user 12345, attempt 1
+2024-01-15 08:31:01.789 ERROR [com.example.app.service.OrderService] - Failed to process order for user 12345
+java.lang.NullPointerException: Cannot invoke method on null object reference
+	at com.example.app.service.OrderService.processOrder(OrderService.java:87)
+	at com.example.app.service.OrderService.handleCheckout(OrderService.java:45)
+	at com.example.app.controller.OrderController.checkout(OrderController.java:32)
+2024-01-15 08:45:12.345 ERROR [com.example.app.repository.ProductRepository] - Database query failed
+org.springframework.dao.DataAccessException: Could not execute query
+	at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:465)
+	at com.example.app.repository.ProductRepository.findByCategory(ProductRepository.java:56)
+	at com.example.app.service.ProductService.getProductsByCategory(ProductService.java:34)
+	at com.example.app.controller.ProductController.listProducts(ProductController.java:28)
+Caused by: java.sql.SQLException: Connection refused: connect
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:828)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:946)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:818)
+2024-01-15 09:00:00.001 INFO  [com.example.app.scheduler.ReportScheduler] - Starting daily report generation
+2024-01-15 09:00:05.234 WARN  [com.example.app.scheduler.ReportScheduler] - Report generation took longer than expected: 5234ms
+2024-01-15 09:15:33.456 ERROR [com.example.app.service.PaymentService] - Payment processing failed for transaction TXN-98765
+java.io.IOException: Connection timed out
+	at com.example.app.service.PaymentService.processPayment(PaymentService.java:112)
+	at com.example.app.service.OrderService.finalizeOrder(OrderService.java:156)
+	at com.example.app.controller.OrderController.confirmPayment(OrderController.java:67)
+2024-01-15 09:30:00.789 INFO  [com.example.app.service.CacheService] - Cache refresh completed, 1500 entries updated
+2024-01-15 09:45:12.012 WARN  [com.example.app.service.EmailService] - Email delivery delayed, SMTP server response slow
+2024-01-15 10:00:00.234 ERROR [com.example.app.service.UserService] - Failed to update user profile
+java.lang.IllegalArgumentException: Email format is invalid: user@@example
+	at com.example.app.util.ValidationUtils.validateEmail(ValidationUtils.java:23)
+	at com.example.app.service.UserService.updateProfile(UserService.java:78)
+	at com.example.app.controller.UserController.updateUser(UserController.java:45)
+2024-01-15 10:15:22.456 DEBUG [com.example.app.service.SearchService] - Search query executed in 45ms, 23 results found
+2024-01-15 10:30:45.789 ERROR [com.example.app.service.FileService] - Failed to upload file: document.pdf
+java.io.IOException: Disk space insufficient
+	at com.example.app.service.FileService.saveFile(FileService.java:67)
+	at com.example.app.controller.FileController.uploadFile(FileController.java:34)
+2024-01-15 10:45:00.012 WARN  [com.example.app.config.DatabaseConfig] - Connection pool reaching capacity: 18/20 connections in use
+2024-01-15 11:00:33.234 ERROR [com.example.app.service.OrderService] - Failed to process order for user 67890
+java.lang.NullPointerException: Cannot invoke method on null object reference
+	at com.example.app.service.OrderService.processOrder(OrderService.java:87)
+	at com.example.app.service.OrderService.handleCheckout(OrderService.java:45)
+	at com.example.app.controller.OrderController.checkout(OrderController.java:32)
+2024-01-15 11:15:00.456 INFO  [com.example.app.Application] - Heap memory usage: 456MB / 1024MB
+2024-01-15 11:30:22.789 FATAL [com.example.app.service.DatabaseService] - Critical: Database connection pool exhausted
+java.lang.RuntimeException: Cannot acquire database connection
+	at com.example.app.service.DatabaseService.getConnection(DatabaseService.java:34)
+	at com.example.app.repository.BaseRepository.executeQuery(BaseRepository.java:56)
+Caused by: org.apache.commons.dbcp2.PoolExhaustedException: Cannot get a connection, pool error Timeout waiting for idle object
+	at org.apache.commons.dbcp2.PoolingDataSource.getConnection(PoolingDataSource.java:140)
+	at com.example.app.service.DatabaseService.getConnection(DatabaseService.java:30)
+2024-01-15 11:45:00.012 WARN  [com.example.app.service.OrderService] - Order queue size exceeding threshold: 250 pending orders
+2024-01-15 12:00:00.234 INFO  [com.example.app.scheduler.CleanupScheduler] - Running scheduled cleanup task
+2024-01-15 12:00:15.456 INFO  [com.example.app.scheduler.CleanupScheduler] - Cleanup completed: 45 expired sessions removed
+2024-01-15 12:15:33.789 ERROR [com.example.app.service.NotificationService] - Failed to send push notification
+java.net.ConnectException: Connection refused (Connection refused)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at com.example.app.service.NotificationService.sendPush(NotificationService.java:89)
+	at com.example.app.service.NotificationService.notifyUser(NotificationService.java:45)
+2024-01-15 12:30:00.012 WARN  [com.example.app.security.SecurityConfig] - Multiple failed login attempts detected from IP: 192.168.1.100
+2024-01-15 12:45:22.234 ERROR [com.example.app.service.PaymentService] - Payment processing failed for transaction TXN-11223
+java.io.IOException: Connection timed out
+	at com.example.app.service.PaymentService.processPayment(PaymentService.java:112)
+	at com.example.app.service.OrderService.finalizeOrder(OrderService.java:156)
+	at com.example.app.controller.OrderController.confirmPayment(OrderController.java:67)
+2024-01-15 13:00:00.456 INFO  [com.example.app.Application] - Midday health check: All services operational
+2024-01-15 13:15:45.789 DEBUG [com.example.app.service.CacheService] - Cache hit ratio: 87.3%
+2024-01-15 13:30:22.012 WARN  [com.example.app.service.ApiGateway] - External API response time degraded: avg 2500ms
+2024-01-15 13:45:00.234 ERROR [com.example.app.service.OrderService] - Failed to process order for user 54321
+java.lang.NullPointerException: Cannot invoke method on null object reference
+	at com.example.app.service.OrderService.processOrder(OrderService.java:87)
+	at com.example.app.service.OrderService.handleCheckout(OrderService.java:45)
+	at com.example.app.controller.OrderController.checkout(OrderController.java:32)
+2024-01-15 14:00:00.456 INFO  [com.example.app.scheduler.MetricsScheduler] - Publishing metrics: requests=12456, errors=23, avgResponseTime=234ms
